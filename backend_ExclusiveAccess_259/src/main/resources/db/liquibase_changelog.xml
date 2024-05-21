@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+		http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd
+		http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+    <property name="schemaName" value="exclusiveaccess"></property>
+    <property name="author=" value="db-designer"></property>
+    <changeSet id="v1-01-01" author="${author}">
+    
+ <createTable schemaName="${schemaName}" tableName="OtherDetails">
+	<column name="OtherDetailsId" type="SERIAL" autoIncrement="true" >
+        <constraints nullable="false" primaryKey="true"/>
+    </column>
+     <column name="ManufacturingDate" type="TIMESTAMP" />
+    
+ 	<column name="AvailabilityStatus" type="INTEGER" />
+   
+     <column name="Size" type="REAL" />
+    
+ 	<column name="UnitOfMeasurement" type="INTEGER" />
+   
+ 	
+</createTable>
+ <createTable schemaName="${schemaName}" tableName="OrderItem">
+	<column name="Order_item_id" type="SERIAL" autoIncrement="true" >
+        <constraints nullable="false" primaryKey="true"/>
+    </column>
+     <column name="Order_item_quantity" type="INTEGER" />
+    
+     <column name="Order_item_price" type="DECIMAL" />
+    
+     <column name="RMA_number" type="INTEGER" />
+    
+     <column name="RMA_issued_by" type="VARCHAR(250)" />
+    
+     <column name="RMA_issued_date" type="TIMESTAMP" />
+    
+     <column name="Other_order_item_details" type="VARCHAR(250)" />
+    
+     <column name="Order_item_status" type="VARCHAR(250)" />
+    
+ 	
+</createTable>
+ <createTable schemaName="${schemaName}" tableName="ProductType">
+	<column name="PtId" type="SERIAL" autoIncrement="true" >
+        <constraints nullable="false" primaryKey="true"/>
+    </column>
+     <column name="ProductTypeName" type="VARCHAR(250)" />
+    
+     <column name="ProductTypeDesc" type="VARCHAR(250)" />
+    
+ 	
+</createTable>
+ <createTable schemaName="${schemaName}" tableName="Product">
+	<column name="Product_id" type="SERIAL" autoIncrement="true" >
+        <constraints nullable="false" primaryKey="true"/>
+    </column>
+     <column name="Return_merchandise_authorization_nr" type="VARCHAR(250)" />
+    
+     <column name="Name" type="VARCHAR(250)" />
+    
+     <column name="Color" type="VARCHAR(250)" />
+    
+     <column name="Size" type="INTEGER" />
+    
+     <column name="Product_description" type="VARCHAR(250)" />
+    
+     <column name="Manufacturer" type="VARCHAR(250)" />
+    
+     <column name="Weight" type="REAL" />
+    
+ 	<column name="UnitOfMeasurement" type="INTEGER" />
+   
+ 	
+</createTable>
+ <createTable schemaName="${schemaName}" tableName="ProductPrice">
+	<column name="PpId" type="SERIAL" autoIncrement="true" >
+        <constraints nullable="false" primaryKey="true"/>
+    </column>
+     <column name="Price" type="DECIMAL" />
+    
+     <column name="DiscountGroup" type="VARCHAR(250)" />
+    
+     <column name="IsVatIncluded" type="BOOLEAN" />
+    
+ 	
+</createTable>
+ <createTable schemaName="${schemaName}" tableName="ShipmentItem">
+	<column name="Shipment_item_id" type="SERIAL" autoIncrement="true" >
+        <constraints nullable="false" primaryKey="true"/>
+    </column>
+     <column name="Order_item_id" type="INTEGER" />
+    
+ 	
+</createTable>
+ <createTable schemaName="${schemaName}" tableName="Document">
+	<column name="DocId" type="SERIAL" autoIncrement="true" >
+        <constraints nullable="false" primaryKey="true"/>
+    </column>
+     <column name="DocType" type="VARCHAR(250)" />
+    
+     <column name="DocName" type="VARCHAR(250)" />
+    
+     <column name="DocPath" type="VARCHAR(250)" />
+    
+     <column name="DocDescription" type="VARCHAR(250)" />
+    
+     <column name="DocExt" type="VARCHAR(250)" />
+    
+ 	<column name="Content" type="BINARY"/>
+	<column name="DocFileType" type="VARCHAR(100)"/>
+	
+</createTable>
+ <createTable schemaName="${schemaName}" tableName="ProductOnBoarding">
+	<column name="PbId" type="SERIAL" autoIncrement="true" >
+        <constraints nullable="false" primaryKey="true"/>
+    </column>
+     <column name="Username" type="VARCHAR(250)" />
+    
+     <column name="Name" type="VARCHAR(250)" />
+    
+     <column name="Description" type="VARCHAR(250)" />
+    
+ 	<column name="Status" type="INTEGER" />
+   
+     <column name="LastStep" type="INTEGER" />
+    
+ 	
+</createTable>
+	
+  <createTable schemaName="${schemaName}" tableName="ProductOtherImages">
+	<column name="Id" type="SERIAL" autoIncrement="true">
+		<constraints primaryKey="true" nullable="false"/>
+	</column>
+	<column name="Product_id" type="INTEGER" />
+	<column name="DocId" type="INTEGER" />
+</createTable>
+
+ 
+	<addForeignKeyConstraint baseTableName="ProductOtherImages" baseTableSchemaName="${schemaName}"  baseColumnNames="Product_id" constraintName="Document_Product_id_fk"
+	                                  referencedTableName="Product" referencedTableSchemaName="${schemaName}" referencedColumnNames="Product_id"/>
+	                                  
+	<addForeignKeyConstraint baseTableName="ProductOtherImages" baseTableSchemaName="${schemaName}"  baseColumnNames="DocId" constraintName="Document_DocId_fk"
+	                                  referencedTableName="Document" referencedTableSchemaName="${schemaName}" referencedColumnNames="DocId"/>
+ 
+	
+  
+	<addColumn tableName="OrderItem" schemaName="${schemaName}">
+	    <column name="OrderItemProductOrder" type="INTEGER"/>
+	</addColumn>
+	<addForeignKeyConstraint baseTableName="OrderItem" baseColumnNames="OrderItemProductOrder" baseTableSchemaName="${schemaName}" constraintName="OrderItem_ProductOrder_fk" referencedTableName="Product"
+	                                 referencedColumnNames="Product_id" referencedTableSchemaName="${schemaName}"/>
+ 
+  
+	<addColumn tableName="Product" schemaName="${schemaName}">
+	    <column name="ProductProductType" type="INTEGER"/>
+	</addColumn>
+	<addForeignKeyConstraint baseTableName="Product" baseColumnNames="ProductProductType" baseTableSchemaName="${schemaName}" constraintName="Product_ProductType_fk" referencedTableName="ProductType"
+	                                 referencedColumnNames="PtId" referencedTableSchemaName="${schemaName}"/>
+ 
+
+	<addColumn tableName="Product" schemaName="${schemaName}">
+	    <column name="ProductOtherDetails" type="INTEGER"/>
+	</addColumn>
+	<addForeignKeyConstraint baseTableName="Product" baseColumnNames="ProductOtherDetails" baseTableSchemaName="${schemaName}" constraintName="Product_OtherDetails_fk" referencedTableName="OtherDetails"
+	                                 referencedColumnNames="OtherDetailsId" referencedTableSchemaName="${schemaName}"/>
+ 
+
+	<addColumn tableName="Product" schemaName="${schemaName}">
+	    <column name="ProductProductPrice" type="INTEGER"/>
+	</addColumn>
+	<addForeignKeyConstraint baseTableName="Product" baseColumnNames="ProductProductPrice" baseTableSchemaName="${schemaName}" constraintName="Product_ProductPrice_fk" referencedTableName="ProductPrice"
+	                                 referencedColumnNames="PpId" referencedTableSchemaName="${schemaName}"/>
+ 
+
+	<addColumn tableName="Product" schemaName="${schemaName}">
+	    <column name="ProductMainImage" type="INTEGER"/>
+	</addColumn>
+	<addForeignKeyConstraint baseTableName="Product" baseColumnNames="ProductMainImage" baseTableSchemaName="${schemaName}" constraintName="Product_MainImage_fk" referencedTableName="Document"
+	                                 referencedColumnNames="DocId" referencedTableSchemaName="${schemaName}"/>
+ 
+  
+	<addColumn tableName="ShipmentItem" schemaName="${schemaName}">
+	    <column name="ShipmentItemOrderItemShipment" type="INTEGER"/>
+	</addColumn>
+	<addForeignKeyConstraint baseTableName="ShipmentItem" baseColumnNames="ShipmentItemOrderItemShipment" baseTableSchemaName="${schemaName}" constraintName="ShipmentItem_OrderItemShipment_fk" referencedTableName="OrderItem"
+	                                 referencedColumnNames="Order_item_id" referencedTableSchemaName="${schemaName}"/>
+ 
+  
+	<addColumn tableName="ProductOnBoarding" schemaName="${schemaName}">
+	    <column name="ProductOnBoardingProduct" type="INTEGER"/>
+	</addColumn>
+	<addForeignKeyConstraint baseTableName="ProductOnBoarding" baseColumnNames="ProductOnBoardingProduct" baseTableSchemaName="${schemaName}" constraintName="ProductOnBoarding_Product_fk" referencedTableName="Product"
+	                                 referencedColumnNames="Product_id" referencedTableSchemaName="${schemaName}"/>
+ 
+	    </changeSet>
+</databaseChangeLog>
