@@ -197,4 +197,11 @@
 	                                 referencedColumnNames="Product_id" referencedTableSchemaName="${schemaName}"/>
  
 	    </changeSet>
+	    <changeSet id="v1-01-02" author="${author}">
+			  <modifyDataType  
+            columnName="Content"
+            newDataType="LONGBLOB"
+            schemaName="${schemaName}"
+            tableName="Document"/>
+		</changeSet>		
 </databaseChangeLog>
